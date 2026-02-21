@@ -1,0 +1,269 @@
+// This is your Prisma schema file for FleetFlow
+// Learn more at https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum UserRole {
+  SUPER_ADMIN
+  FLEET_MANAGER
+  DISPATCHER
+  SAFETY_OFFICER
+  FINANCIAL_ANALYST
+}
+
+enum VehicleType {
+  TRUCK
+  VAN
+  BIKE
+  OTHER
+}
+
+enum VehicleStatus {
+  AVAILABLE
+  ON_TRIP
+  IN_SHOP
+  RETIRED
+}
+
+enum DriverStatus {
+  OFF_DUTY
+  ON_DUTY
+  SUSPENDED
+}
+
+enum LicenseCategory {
+  TRUCK
+  VAN
+  BIKE
+}
+
+enum TripStatus {
+  DRAFT
+  DISPATCHED
+  COMPLETED
+  CANCELLED
+}
+
+enum MaintenanceType {
+  SCHEDULED
+  URGENT
+}
+
+enum MaintenanceStatus {
+  OPEN
+  RESOLVED
+}
+
+enum ExpenseCategory {
+  FUEL
+  MAINTENANCE
+  INSURANCE
+  OTHER
+}
+
+enum RuleTriggerType {
+  FUEL_COST_THRESHOLD
+  VEHICLE_IDLE_HOURS
+  DRIVER_LICENSE_EXPIRY
+  MAINTENANCE_OVERDUE
+  CARGO_WEIGHT_EXCEEDED
+}
+
+enum RuleActionType {
+  CREATE_ALERT
+  BLOCK_ASSIGNMENT
+  NOTIFY_MANAGER
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+// ─────────────────────────────────────────────
+// MODELS
+// ─────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(DISPATCHER)
+  companyId    String   @map("company_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([companyId])
+  @@map("users")
+}
+
+model Vehicle {
+  id              String        @id @default(cuid())
+  name            String
+  model           String?
+  licensePlate    String        @unique @map("license_plate")
+  type            VehicleType   @default(VAN)
+  maxCapacityKg   Float         @map("max_capacity_kg")
+  odometerKm      Float         @default(0) @map("odometer_km")
+  status          VehicleStatus @default(AVAILABLE)
+  companyId       String        @map("company_id")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  trips            Trip[]
+  fuelLogs         FuelLog[]
+  maintenanceLogs  MaintenanceLog[]
+  expenses         Expense[]
+  alerts           Alert[]
+
+  @@index([companyId])
+  @@index([status])
+  @@map("vehicles")
+}
+
+model Driver {
+  id                  String          @id @default(cuid())
+  name                String
+  licenseNumber       String          @unique @map("license_number")
+  licenseExpiry       DateTime        @map("license_expiry")
+  licenseCategory     LicenseCategory @map("license_category")
+  insuranceDetails    String?         @map("insurance_details")
+  medicalClearance    Boolean         @default(false) @map("medical_clearance")
+  status              DriverStatus    @default(OFF_DUTY)
+  safetyScore         Float           @default(100) @map("safety_score")
+  tripCompletionRate  Float           @default(0) @map("trip_completion_rate")
+  companyId           String          @map("company_id")
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+
+  trips   Trip[]
+  alerts  Alert[]
+
+  @@index([companyId])
+  @@index([status])
+  @@map("drivers")
+}
+
+model Trip {
+  id              String     @id @default(cuid())
+  vehicleId       String     @map("vehicle_id")
+  driverId        String     @map("driver_id")
+  cargoWeightKg   Float      @map("cargo_weight_kg")
+  origin          String
+  destination     String
+  status          TripStatus @default(DRAFT)
+  odometerStart   Float      @default(0) @map("odometer_start")
+  odometerEnd     Float?     @map("odometer_end")
+  distanceKm      Float?     @map("distance_km")
+  fuelConsumed    Float?     @map("fuel_consumed")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  completedAt     DateTime?  @map("completed_at")
+
+  vehicle  Vehicle   @relation(fields: [vehicleId], references: [id])
+  driver   Driver    @relation(fields: [driverId], references: [id])
+  fuelLogs FuelLog[]
+
+  @@index([vehicleId])
+  @@index([driverId])
+  @@index([status])
+  @@map("trips")
+}
+
+model FuelLog {
+  id        String   @id @default(cuid())
+  vehicleId String   @map("vehicle_id")
+  tripId    String?  @map("trip_id")
+  litres    Float
+  cost      Float
+  date      DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+  trip    Trip?   @relation(fields: [tripId], references: [id])
+
+  @@index([vehicleId])
+  @@map("fuel_logs")
+}
+
+model MaintenanceLog {
+  id          String            @id @default(cuid())
+  vehicleId   String            @map("vehicle_id")
+  type        MaintenanceType   @default(SCHEDULED)
+  description String
+  cost        Float?
+  date        DateTime
+  status      MaintenanceStatus @default(OPEN)
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId])
+  @@index([status])
+  @@map("maintenance_logs")
+}
+
+model Expense {
+  id          String          @id @default(cuid())
+  vehicleId   String          @map("vehicle_id")
+  category    ExpenseCategory
+  amount      Float
+  description String?
+  date        DateTime
+  createdAt   DateTime        @default(now()) @map("created_at")
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id])
+
+  @@index([vehicleId])
+  @@index([category])
+  @@map("expenses")
+}
+
+model Rule {
+  id             String          @id @default(cuid())
+  companyId      String          @map("company_id")
+  triggerType    RuleTriggerType @map("trigger_type")
+  conditionValue Float           @map("condition_value")
+  actionType     RuleActionType  @map("action_type")
+  isActive       Boolean         @default(true) @map("is_active")
+  createdAt      DateTime        @default(now()) @map("created_at")
+
+  alerts Alert[]
+
+  @@index([companyId])
+  @@map("rules")
+}
+
+model Alert {
+  id        String        @id @default(cuid())
+  ruleId    String?       @map("rule_id")
+  vehicleId String?       @map("vehicle_id")
+  driverId  String?       @map("driver_id")
+  message   String
+  severity  AlertSeverity @default(INFO)
+  isRead    Boolean       @default(false) @map("is_read")
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  rule    Rule?    @relation(fields: [ruleId], references: [id])
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id])
+  driver  Driver?  @relation(fields: [driverId], references: [id])
+
+  @@index([isRead])
+  @@index([vehicleId])
+  @@index([driverId])
+  @@map("alerts")
+}
