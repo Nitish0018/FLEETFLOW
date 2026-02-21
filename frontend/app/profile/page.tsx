@@ -1,5 +1,7 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Truck, User, LogOut, Mail, Briefcase, ShieldCheck, MapPin, Edit3 } from 'lucide-react';
@@ -7,12 +9,33 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function ProfilePage() {
-    const { user, logout } = useAuth();
+    const { user, updateProfile, logout } = useAuth();
     const router = useRouter();
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [editName, setEditName] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (user) setEditName(user.name);
+    }, [user]);
 
     const handleLogout = async () => {
         await logout();
         router.replace('/login');
+    };
+
+    const handleSave = async () => {
+        try {
+            setLoading(true);
+            await updateProfile({ name: editName });
+            setIsEditing(false);
+        } catch (e) {
+            console.error('Failed to update profile', e);
+            alert('Failed to update profile');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -53,9 +76,20 @@ export default function ProfilePage() {
                             <h1 className="text-2xl font-bold text-white">Your Profile</h1>
                             <p className="text-[#8892A4] text-sm mt-0.5">Manage your personal information and account settings.</p>
                         </div>
-                        <button className="bg-[#1E293B] hover:bg-[#2D3748] text-white font-medium py-2 px-4 rounded-xl transition-colors border border-[#2D3748] flex items-center gap-2 text-sm">
-                            <Edit3 className="w-4 h-4" /> Edit Profile
-                        </button>
+                        {!isEditing ? (
+                            <button onClick={() => setIsEditing(true)} className="bg-[#1E293B] hover:bg-[#2D3748] text-white font-medium py-2 px-4 rounded-xl transition-colors border border-[#2D3748] flex items-center gap-2 text-sm">
+                                <Edit3 className="w-4 h-4" /> Edit Profile
+                            </button>
+                        ) : (
+                            <div className="flex items-center gap-3">
+                                <button onClick={() => { setIsEditing(false); setEditName(user?.name || ''); }} className="px-4 py-2 border border-[#2D3748] text-white text-sm font-medium rounded-xl hover:bg-[#1E293B] transition-colors">
+                                    Cancel
+                                </button>
+                                <button disabled={loading} onClick={handleSave} className="bg-gradient-to-r from-[#00C2FF] to-[#0066FF] text-white text-sm font-medium py-2 px-4 rounded-xl hover:from-[#00A8E0] hover:to-[#0052D9] transition-all shadow-lg shadow-[#00C2FF]/20 flex items-center gap-2">
+                                    {loading ? 'Saving...' : 'Save Profile'}
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -107,7 +141,16 @@ export default function ProfilePage() {
                                     <div className="grid grid-cols-2 gap-4 border-b border-[#1E293B] pb-5">
                                         <div>
                                             <label className="text-xs text-[#8892A4] font-medium uppercase tracking-wider mb-1 block">Full Name</label>
-                                            <p className="text-white text-sm">{user?.name}</p>
+                                            {isEditing ? (
+                                                <input
+                                                    value={editName}
+                                                    onChange={e => setEditName(e.target.value)}
+                                                    className="w-full bg-[#1E293B] border border-[#2D3748] rounded-xl px-3 py-2 text-white text-sm focus:border-[#00C2FF] outline-none"
+                                                    autoFocus
+                                                />
+                                            ) : (
+                                                <p className="text-white text-sm">{user?.name}</p>
+                                            )}
                                         </div>
                                         <div>
                                             <label className="text-xs text-[#8892A4] font-medium uppercase tracking-wider mb-1 block">Role</label>

@@ -15,12 +15,12 @@ router.get('/', getDrivers);
 router.get('/:id', getDriverById);
 
 // Create driver (Fleet Manager, Dispatcher, Admin)
-router.post('/', roleGuard(['FLEET_MANAGER', 'DISPATCHER', 'SUPER_ADMIN']), createDriver);
+router.post('/', roleGuard('FLEET_MANAGER', 'DISPATCHER', 'SUPER_ADMIN'), createDriver);
 
 // Update driver details
-router.put('/:id', roleGuard(['FLEET_MANAGER', 'DISPATCHER', 'SUPER_ADMIN']), updateDriver);
+router.put('/:id', roleGuard('FLEET_MANAGER', 'DISPATCHER', 'SUPER_ADMIN'), updateDriver);
 
 // Update driver status
-router.put('/:id/status', roleGuard(['FLEET_MANAGER', 'DISPATCHER', 'SUPER_ADMIN']), updateDriverStatus);
+router.put('/:id/status', roleGuard('FLEET_MANAGER', 'DISPATCHER', 'SUPER_ADMIN'), updateDriverStatus);
 
 export default router;

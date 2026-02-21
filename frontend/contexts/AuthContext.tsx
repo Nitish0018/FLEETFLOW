@@ -15,6 +15,7 @@ interface AuthContextType {
     accessToken: string | null;
     login: (email: string, password: string) => Promise<void>;
     register: (params: { name: string; email: string; password: string; companyId: string }) => Promise<void>;
+    updateProfile: (params: { name?: string }) => Promise<void>;
     logout: () => Promise<void>;
     loading: boolean;
 }
@@ -73,6 +74,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('fleetflow_refresh', data.refreshToken);
     };
 
+    const updateProfile = async (params: { name?: string }) => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(accessToken && { 'Authorization': `Bearer ${accessToken}` })
+            },
+            body: JSON.stringify(params),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => null);
+            throw new Error(err?.error || 'Failed to update profile');
+        }
+        const data = await res.json();
+        setUser(data.user);
+        localStorage.setItem('fleetflow_user', JSON.stringify(data.user));
+    };
+
     const logout = async () => {
         const refreshToken = localStorage.getItem('fleetflow_refresh');
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
@@ -88,7 +107,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, accessToken, login, register, logout, loading }}>
+        <AuthContext.Provider value={{ user, accessToken, login, register, updateProfile, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );

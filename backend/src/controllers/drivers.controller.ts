@@ -47,8 +47,9 @@ export const getDrivers = async (req: Request, res: Response) => {
 // GET /api/drivers/:id
 export const getDriverById = async (req: Request, res: Response) => {
     try {
+        const id = String(req.params.id);
         const driver = await prisma.driver.findUnique({
-            where: { id: req.params.id },
+            where: { id },
             include: {
                 trips: {
                     orderBy: { createdAt: 'desc' },
@@ -101,10 +102,11 @@ export const createDriver = async (req: AuthRequest, res: Response) => {
 // PUT /api/drivers/:id
 export const updateDriver = async (req: Request, res: Response) => {
     try {
+        const id = String(req.params.id);
         const { name, licenseNumber, licenseExpiry, licenseCategory, insuranceDetails, medicalClearance } = req.body;
 
         const driver = await prisma.driver.update({
-            where: { id: req.params.id },
+            where: { id },
             data: {
                 ...(name && { name }),
                 ...(licenseNumber && { licenseNumber }),
@@ -124,13 +126,14 @@ export const updateDriver = async (req: Request, res: Response) => {
 // PUT /api/drivers/:id/status
 export const updateDriverStatus = async (req: Request, res: Response) => {
     try {
+        const id = String(req.params.id);
         const { status } = req.body;
         if (!Object.values(DriverStatus).includes(status)) {
             return res.status(400).json({ error: `Invalid status. Must be one of: ${Object.values(DriverStatus).join(', ')}` });
         }
 
         const driver = await prisma.driver.update({
-            where: { id: req.params.id },
+            where: { id },
             data: { status },
         });
 

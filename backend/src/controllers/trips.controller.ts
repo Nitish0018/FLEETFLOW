@@ -100,33 +100,17 @@ export const createTrip = async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ error: `Driver is not off duty. Current status: ${driver.status}` });
         }
 
-        // Create trip and update statuses in a transaction
-        const trip = await prisma.$transaction(async (tx) => {
-            const newTrip = await tx.trip.create({
-                data: {
-                    vehicleId,
-                    driverId,
-                    cargoWeightKg: Number(cargoWeightKg),
-                    origin,
-                    destination,
-                    status: TripStatus.DISPATCHED,
-                    odometerStart: vehicle.odometerKm,
-                },
-            });
-
-            // Update vehicle status to ON_TRIP
-            await tx.vehicle.update({
-                where: { id: vehicleId },
-                data: { status: VehicleStatus.ON_TRIP },
-            });
-
-            // Update driver status to ON_DUTY
-            await tx.driver.update({
-                where: { id: driverId },
-                data: { status: DriverStatus.ON_DUTY },
-            });
-
-            return newTrip;
+        // Create trip as DRAFT – vehicle/driver status changes happen on dispatch
+        const trip = await prisma.trip.create({
+            data: {
+                vehicleId,
+                driverId,
+                cargoWeightKg: Number(cargoWeightKg),
+                origin,
+                destination,
+                status: TripStatus.DRAFT,
+                odometerStart: vehicle.odometerKm,
+            },
         });
 
         const fullTrip = await prisma.trip.findUnique({
@@ -218,8 +202,9 @@ export const completeTrip = async (req: Request, res: Response) => {
 // PUT /api/trips/:id/cancel
 export const cancelTrip = async (req: Request, res: Response) => {
     try {
+        const id = String(req.params.id);
         const trip = await prisma.trip.findUnique({
-            where: { id: req.params.id },
+            where: { id },
             include: { vehicle: true, driver: true },
         });
 
@@ -234,7 +219,7 @@ export const cancelTrip = async (req: Request, res: Response) => {
 
         const updatedTrip = await prisma.$transaction(async (tx) => {
             const cancelled = await tx.trip.update({
-                where: { id: req.params.id },
+                where: { id },
                 data: { status: TripStatus.CANCELLED },
             });
 
@@ -263,8 +248,9 @@ export const cancelTrip = async (req: Request, res: Response) => {
 // PUT /api/trips/:id/dispatch
 export const dispatchTrip = async (req: Request, res: Response) => {
     try {
+        const id = String(req.params.id);
         const trip = await prisma.trip.findUnique({
-            where: { id: req.params.id },
+            where: { id },
             include: { vehicle: true, driver: true },
         });
 
@@ -276,7 +262,7 @@ export const dispatchTrip = async (req: Request, res: Response) => {
 
         const updatedTrip = await prisma.$transaction(async (tx) => {
             const dispatched = await tx.trip.update({
-                where: { id: req.params.id },
+                where: { id },
                 data: { status: TripStatus.DISPATCHED },
             });
 

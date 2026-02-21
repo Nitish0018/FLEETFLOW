@@ -125,3 +125,29 @@ export const logout = async (req: Request, res: Response) => {
         return res.json({ message: 'Logged out' });
     }
 };
+
+// PUT /api/auth/profile
+export const updateProfile = async (req: Request, res: Response) => {
+    try {
+        const { name } = req.body;
+        // Verify user from token first
+        const authHeader = req.headers.authorization;
+        const token = authHeader && authHeader.split(' ')[1];
+        if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+        const decoded = jwt.verify(token, ACCESS_SECRET) as { id: string };
+
+        const updatedUser = await prisma.user.update({
+            where: { id: decoded.id },
+            data: {
+                ...(name && { name })
+            }
+        });
+
+        return res.json({
+            user: { id: updatedUser.id, name: updatedUser.name, email: updatedUser.email, role: updatedUser.role, companyId: updatedUser.companyId }
+        });
+    } catch (err) {
+        return res.status(500).json({ error: 'Failed to update profile' });
+    }
+};
