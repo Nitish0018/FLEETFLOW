@@ -10,9 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─────────────────────────────────────────────
-// ENUMS
-// ─────────────────────────────────────────────
+// --- ENUMS ---
 
 enum UserRole {
   SUPER_ADMIN
@@ -92,9 +90,7 @@ enum AlertSeverity {
   CRITICAL
 }
 
-// ─────────────────────────────────────────────
-// MODELS
-// ─────────────────────────────────────────────
+// --- MODELS ---
 
 model User {
   id           String   @id @default(cuid())

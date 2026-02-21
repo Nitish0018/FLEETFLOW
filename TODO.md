@@ -2,13 +2,14 @@
 
 > **Source docs:** FEETFLOW_PRD.pdf · FEETFLOW_Design_Doc.pdf · FEETFLOW_TECH STACK.pdf · FleetFlow 8-Hour Plan.pdf  
 > **Goal:** Replace manual logbooks with a centralized, rule-based digital hub that optimizes fleet lifecycle, monitors driver safety, and tracks financial performance.  
-> **Mockup:** https://link.excalidraw.com/l/65VNwvy7c4X/9gLrP9aS4YZ
+> **Mockup:** <https://link.excalidraw.com/l/65VNwvy7c4X/9gLrP9aS4YZ>
 
 ---
 
 ## 👥 User Roles
+
 | Role | Responsibilities |
-|---|---|
+| --- | --- |
 | Fleet Manager | Vehicle health, asset lifecycle, scheduling |
 | Dispatcher | Create trips, assign drivers, validate cargo loads |
 | Safety Officer | Driver compliance, license expirations, safety scores |
@@ -19,12 +20,14 @@
 ## ⚙️ PHASE 0 — Project Setup & Infrastructure ✅
 
 ### 0.1 Repo & Tooling
+
 - [x] Initialize project (`frontend/` + `backend/` folders)
 - [x] Set up `.gitignore`, `README.md`, `.env.example`
 - [x] Git repo initialized + pushed to GitHub (`Nitish0018/FLEETFLOW`)
 - [ ] Configure ESLint + Prettier (auto-configured by Next.js; add shared config if needed)
 
 ### 0.2 Frontend (Next.js + Tailwind)
+
 - [x] Next.js app scaffolded with TypeScript + Tailwind + ESLint
 - [x] Tailwind CSS configured (built into Next.js scaffold)
 - [x] Install Framer Motion, Recharts, Lucide React, Socket.io-client
@@ -34,6 +37,7 @@
 - [ ] Set up responsive breakpoint utilities
 
 ### 0.3 Backend (Node.js / Express)
+
 - [x] Node.js + Express + TypeScript initialized in `backend/`
 - [x] Folder structure created: `src/routes/`, `src/controllers/`, `src/middlewares/`, `src/services/`, `src/lib/`
 - [x] Installed: `helmet`, `cors`, `express-rate-limit`, `bcrypt`, `jsonwebtoken`, `socket.io`
@@ -43,12 +47,14 @@
 - [x] `src/lib/redis.ts` — singleton Redis client
 
 ### 0.4 Database (PostgreSQL + Prisma + Redis)
+
 - [ ] Create Supabase project + copy `DATABASE_URL` into `backend/.env`
 - [x] Prisma installed + `prisma/schema.prisma` written (all 10 entities, enums, relations)
 - [ ] Run `npx prisma migrate dev --name init` (needs `DATABASE_URL` first)
 - [ ] Set up Redis instance (local or Upstash); copy `REDIS_URL` into `backend/.env`
 
 ### 0.5 DevOps & Hosting
+
 - [x] Socket.io server set up on backend + client package installed on frontend
 - [ ] Deploy frontend to **Vercel** (connect `Nitish0018/FLEETFLOW` → `frontend/` folder)
 - [ ] Deploy backend to **Render / Railway** (root: `backend/`, build: `npm run build`)
@@ -79,7 +85,8 @@
 
 **Page Purpose:** Secure access portal for all user roles.
 
-### Backend
+### Backend (Auth)
+
 - [ ] `POST /api/auth/register` — Create user, hash password with bcrypt, assign role
 - [ ] `POST /api/auth/login` — Validate credentials, return JWT access token + refresh token
 - [ ] `POST /api/auth/refresh` — Reissue access token via refresh token
@@ -88,7 +95,8 @@
 - [ ] Build `roleGuard(roles[])` middleware (block unauthorized roles per route)
 - [ ] Apply rate limiting to `/api/auth/*` routes
 
-### Frontend
+### Frontend (Auth)
+
 - [ ] Login page: email + password fields, "Forgot Password" link
 - [ ] Auth context / Zustand store for global session state
 - [ ] Store access token securely (httpOnly cookie or memory)
@@ -102,7 +110,8 @@
 
 **Page Purpose:** High-level "at-a-glance" fleet oversight for Fleet Managers.
 
-### Backend
+### Backend (Dashboard)
+
 - [ ] `GET /api/dashboard/summary` — Return KPIs:
   - `active_fleet_count` (vehicles with status "On Trip")
   - `maintenance_alerts_count` (vehicles "In Shop")
@@ -110,7 +119,8 @@
   - `pending_cargo_count` (trips with status "Draft")
 - [ ] Cache KPI results in Redis (TTL: 60s), invalidate on status changes
 
-### Frontend
+### Frontend (Dashboard)
+
 - [ ] KPI Card component (value, label, icon, trend indicator)
 - [ ] KPI Grid: Active Fleet · Maintenance Alerts · Utilization Rate · Pending Cargo
 - [ ] Filter bar: Vehicle Type (Truck / Van / Bike), Status, Region
@@ -126,7 +136,8 @@
 
 **Page Purpose:** CRUD for all physical fleet assets.
 
-### Backend
+### Backend (Vehicles)
+
 - [ ] `GET /api/vehicles` — List all vehicles (filter: type, status, region; paginated)
 - [ ] `GET /api/vehicles/:id` — Vehicle detail + maintenance history + odometer log
 - [ ] `POST /api/vehicles` — Add vehicle (name/model, license plate, type, max capacity kg, odometer)
@@ -134,7 +145,8 @@
 - [ ] `PUT /api/vehicles/:id/status` — Toggle status: Available / Retired (Out of Service)
 - [ ] `DELETE /api/vehicles/:id` — Soft-delete vehicle
 
-### Frontend
+### Frontend (Vehicles)
+
 - [ ] Vehicles list page — scannable data table with status pills (Available / On Trip / In Shop / Retired)
 - [ ] Filter bar: type, status
 - [ ] Add Vehicle modal/form (name, license plate, type, max load kg, odometer)
@@ -148,7 +160,8 @@
 
 **Page Purpose:** Workflow to move cargo from Point A to Point B.
 
-### Backend
+### Backend (Trips)
+
 - [ ] `GET /api/trips` — List trips (filter: status, vehicle, driver, date range; paginated)
 - [ ] `GET /api/trips/:id` — Trip detail
 - [ ] `POST /api/trips` — Create trip:
@@ -163,7 +176,8 @@
 - [ ] `PUT /api/trips/:id/cancel` — Cancel trip, restore Vehicle + Driver status → "Available"
 - [ ] Trip lifecycle: **Draft → Dispatched → Completed → Cancelled**
 
-### Frontend
+### Frontend (Trips)
+
 - [ ] Trips list page — data table with status pills (Draft / Dispatched / Completed / Cancelled)
 - [ ] Create Trip form:
   - Vehicle selector (only shows "Available" vehicles)
@@ -181,7 +195,8 @@
 
 **Page Purpose:** Preventative and reactive vehicle health tracking.
 
-### Backend
+### Backend (Maintenance)
+
 - [ ] `GET /api/maintenance` — List maintenance logs (filter: vehicle, status: Open/Resolved)
 - [ ] `GET /api/maintenance/:id` — Log detail
 - [ ] `POST /api/maintenance` — Add service log entry:
@@ -191,7 +206,8 @@
 - [ ] `DELETE /api/maintenance/:id` — Delete log
 - [ ] Rule: If maintenance scheduled date overdue by > 7 days → create Alert
 
-### Frontend
+### Frontend (Maintenance)
+
 - [ ] Maintenance list page — data table (vehicle, type, description, date, status pill)
 - [ ] Add Maintenance form (vehicle selector, type: Scheduled/Urgent, description, cost, date)
 - [ ] Resolve maintenance button (updates vehicle status to Available)
@@ -204,7 +220,8 @@
 
 **Page Purpose:** Per-asset financial tracking after trip completion.
 
-### Backend
+### Backend (Expenses)
+
 - [ ] `GET /api/fuel` — List fuel logs (filter: vehicle, date range)
 - [ ] `POST /api/fuel` — Add fuel log (vehicle_id, trip_id, litres, cost, date)
 - [ ] `PUT /api/fuel/:id` — Edit fuel log
@@ -215,7 +232,8 @@
 - [ ] **Calculated field per vehicle:** `total_operational_cost = SUM(fuel costs) + SUM(maintenance costs)`
 - [ ] Rule: Fuel cost for trip > X threshold → create Alert
 
-### Frontend
+### Frontend (Expenses)
+
 - [ ] Fuel log list page + add fuel log form (vehicle, litres, cost, date)
 - [ ] Expenses list page + add expense form (vehicle, category, amount, description, date)
 - [ ] Per-vehicle total operational cost card

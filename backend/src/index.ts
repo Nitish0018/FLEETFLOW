@@ -39,8 +39,10 @@ app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// TODO: Import and mount routers here
-// app.use('/api/auth', authRouter);
+import authRouter from './routes/auth.routes';
+
+// Mount routers
+app.use('/api/auth', authRouter);
 // app.use('/api/vehicles', vehiclesRouter);
 // app.use('/api/drivers', driversRouter);
 // app.use('/api/trips', tripsRouter);
@@ -51,6 +53,7 @@ app.get('/api/health', (_req, res) => {
 // app.use('/api/alerts', alertsRouter);
 // app.use('/api/analytics', analyticsRouter);
 // app.use('/api/dashboard', dashboardRouter);
+
 
 // Socket.io connection
 io.on('connection', (socket) => {

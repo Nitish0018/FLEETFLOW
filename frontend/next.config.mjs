@@ -2,7 +2,12 @@
 const nextConfig = {
     reactStrictMode: true,
     images: {
-        domains: ['fleetflow-uploads.s3.amazonaws.com'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'fleetflow-uploads.s3.amazonaws.com',
+            },
+        ],
     },
 };
 
