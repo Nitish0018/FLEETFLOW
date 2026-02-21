@@ -40,9 +40,11 @@ app.get('/api/health', (_req, res) => {
 });
 
 import authRouter from './routes/auth.routes';
+import dashboardRouter from './routes/dashboard.routes';
 
 // Mount routers
 app.use('/api/auth', authRouter);
+app.use('/api/dashboard', dashboardRouter);
 // app.use('/api/vehicles', vehiclesRouter);
 // app.use('/api/drivers', driversRouter);
 // app.use('/api/trips', tripsRouter);
