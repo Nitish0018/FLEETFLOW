@@ -8,6 +8,7 @@ import {
     LogOut, User, Bell, TrendingUp, Fuel, Wrench, Users, LayoutDashboard,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     PieChart, Pie, Cell, Legend
@@ -84,24 +85,16 @@ export default function DashboardPage() {
 
                 {/* Navbar */}
                 <nav className="sticky top-0 z-50 border-b border-[#1E293B] bg-[#0A0F1E]/90 backdrop-blur-md px-6 py-3.5 flex items-center justify-between">
-                    <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C2FF] to-[#0066FF] flex items-center justify-center shadow-lg shadow-[#00C2FF]/20">
+                    <div className="flex items-center gap-8">
+                        <Link href="/dashboard" className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-linear-to-br from-[#00C2FF] to-[#0066FF] flex items-center justify-center shadow-lg shadow-[#00C2FF]/20">
                                 <Truck className="w-4 h-4 text-white" />
                             </div>
                             <span className="font-bold text-lg tracking-tight">FleetFlow</span>
-                        </div>
-                        {/* Nav links */}
-                        <div className="hidden sm:flex items-center gap-1">
-                            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-[#00C2FF]/10 text-[#00C2FF] border border-[#00C2FF]/20">
-                                <LayoutDashboard className="w-3.5 h-3.5" /> Dashboard
-                            </button>
-                            <button
-                                onClick={() => router.push('/vehicles')}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-[#8892A4] hover:text-white hover:bg-[#1E293B] transition-colors"
-                            >
-                                <Truck className="w-3.5 h-3.5" /> Vehicles
-                            </button>
+                        </Link>
+                        <div className="hidden md:flex items-center gap-1">
+                            <Link href="/dashboard" className="px-3 py-1.5 text-sm text-white bg-[#1E293B] rounded-lg transition-colors">Dashboard</Link>
+                            <Link href="/vehicles" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Vehicles</Link>
                         </div>
                     </div>
 
@@ -244,7 +237,7 @@ export default function DashboardPage() {
                         </div>
                     </div>
                 </div>
-            </div>
-        </ProtectedRoute>
+            </div >
+        </ProtectedRoute >
     );
 }

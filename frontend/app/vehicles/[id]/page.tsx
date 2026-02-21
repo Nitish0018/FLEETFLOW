@@ -220,7 +220,7 @@ export default function VehicleDetailPage() {
                 <nav className="sticky top-0 z-50 border-b border-[#1E293B] bg-[#0A0F1E]/90 backdrop-blur-md px-6 py-3.5 flex items-center justify-between">
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C2FF] to-[#0066FF] flex items-center justify-center shadow-lg shadow-[#00C2FF]/20">
+                            <div className="w-8 h-8 rounded-lg bg-linear-to-br from-[#00C2FF] to-[#0066FF] flex items-center justify-center shadow-lg shadow-[#00C2FF]/20">
                                 <Truck className="w-4 h-4 text-white" />
                             </div>
                             <span className="font-bold text-lg tracking-tight">FleetFlow</span>
@@ -288,7 +288,7 @@ export default function VehicleDetailPage() {
                             <div className="bg-[#111827] border border-[#1E293B] rounded-2xl p-6">
                                 <div className="flex flex-wrap items-start justify-between gap-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00C2FF]/20 to-[#0066FF]/20 border border-[#00C2FF]/20 flex items-center justify-center flex-shrink-0">
+                                        <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-[#00C2FF]/20 to-[#0066FF]/20 border border-[#00C2FF]/20 flex items-center justify-center shrink-0">
                                             <Truck className="w-7 h-7 text-[#00C2FF]" />
                                         </div>
                                         <div>
@@ -388,7 +388,7 @@ export default function VehicleDetailPage() {
                                                             <span className="text-xs text-[#4B5563]">{fmt(log.date)}</span>
                                                         </div>
                                                     </div>
-                                                    <div className="text-right flex-shrink-0">
+                                                    <div className="text-right shrink-0">
                                                         {log.cost != null && (
                                                             <p className="text-sm font-medium text-white">₹{log.cost.toLocaleString()}</p>
                                                         )}
@@ -461,7 +461,7 @@ export default function VehicleDetailPage() {
                                                     <div className="flex-1 min-w-0">
                                                         <div className="flex items-center gap-2 text-sm">
                                                             <span className="text-white font-medium truncate">{trip.origin}</span>
-                                                            <span className="text-[#4B5563] flex-shrink-0">→</span>
+                                                            <span className="text-[#4B5563] shrink-0">→</span>
                                                             <span className="text-white font-medium truncate">{trip.destination}</span>
                                                         </div>
                                                         <div className="flex items-center gap-2 mt-1 text-xs text-[#4B5563]">
@@ -474,7 +474,7 @@ export default function VehicleDetailPage() {
                                                         </div>
                                                     </div>
                                                     <span
-                                                        className="text-xs font-medium px-2 py-1 rounded-lg flex-shrink-0"
+                                                        className="text-xs font-medium px-2 py-1 rounded-lg shrink-0"
                                                         style={{
                                                             color: tripStatusColor[trip.status] ?? '#8892A4',
                                                             backgroundColor: `${tripStatusColor[trip.status] ?? '#8892A4'}15`,
@@ -506,7 +506,7 @@ export default function VehicleDetailPage() {
                         <form onSubmit={handleEdit} className="px-6 py-5 space-y-4">
                             {editError && (
                                 <div className="flex items-center gap-2 px-3 py-2.5 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
-                                    <AlertTriangle className="w-4 h-4 flex-shrink-0" /> {editError}
+                                    <AlertTriangle className="w-4 h-4 shrink-0" /> {editError}
                                 </div>
                             )}
                             <div className="grid grid-cols-2 gap-4">
@@ -580,7 +580,7 @@ export default function VehicleDetailPage() {
                                         onClick={() => setNewStatus(s)}
                                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors text-left ${newStatus === s ? 'border-[#00C2FF]/50 bg-[#00C2FF]/5' : 'border-[#1E293B] hover:border-[#2D3748]'}`}
                                     >
-                                        <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: sc.color }} />
+                                        <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: sc.color }} />
                                         <span className="text-sm text-white">{sc.label}</span>
                                         {newStatus === s && <CheckCircle className="w-4 h-4 ml-auto text-[#00C2FF]" />}
                                     </button>
@@ -606,7 +606,7 @@ export default function VehicleDetailPage() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
                     <div className="bg-[#111827] border border-[#1E293B] rounded-2xl w-full max-w-sm shadow-2xl p-6">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                            <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
                                 <AlertTriangle className="w-5 h-5 text-red-400" />
                             </div>
                             <div>

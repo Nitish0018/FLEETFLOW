@@ -32,8 +32,8 @@ export default function LoginPage() {
         <main className="min-h-screen bg-[#0A0F1E] flex items-center justify-center p-4 relative overflow-hidden">
 
             {/* Background glow effects */}
-            <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-[#00C2FF] opacity-[0.06] rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-[#00C2FF] opacity-[0.04] rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-[-20%] left-[-10%] w-125 h-125 bg-[#00C2FF] opacity-[0.06] rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[-20%] right-[-10%] w-125 h-125 bg-[#00C2FF] opacity-[0.04] rounded-full blur-[120px] pointer-events-none" />
 
             {/* Grid overlay */}
             <div
@@ -45,7 +45,7 @@ export default function LoginPage() {
 
                 {/* Logo */}
                 <div className="text-center mb-10">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00C2FF] to-[#0066FF] mb-4 shadow-lg shadow-[#00C2FF]/20">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br from-[#00C2FF] to-[#0066FF] mb-4 shadow-lg shadow-[#00C2FF]/20">
                         <Truck className="w-8 h-8 text-white" />
                     </div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">FleetFlow</h1>
@@ -118,7 +118,7 @@ export default function LoginPage() {
                             id="login-submit"
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-[#00C2FF] to-[#0066FF] hover:from-[#00A8E0] hover:to-[#0052D9] text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg shadow-[#00C2FF]/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full bg-linear-to-r from-[#00C2FF] to-[#0066FF] hover:from-[#00A8E0] hover:to-[#0052D9] text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg shadow-[#00C2FF]/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             {loading ? (
                                 <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Signing in...</>
@@ -142,7 +142,20 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                <p className="text-center text-[#4B5563] text-xs mt-6">
+                <div className="mt-4 text-center">
+                    <p className="text-[#4B5563] text-xs">
+                        Don&apos;t have an account?{' '}
+                        <button
+                            type="button"
+                            onClick={() => router.push('/register')}
+                            className="text-[#00C2FF] hover:text-white font-medium"
+                        >
+                            Create one
+                        </button>
+                    </p>
+                </div>
+
+                <p className="text-center text-[#4B5563] text-xs mt-4">
                     &ldquo;Moving smarter, one mile at a time.&rdquo;
                 </p>
             </div>

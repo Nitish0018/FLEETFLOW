@@ -13,6 +13,7 @@ interface AuthContextType {
     user: User | null;
     accessToken: string | null;
     login: (email: string, password: string) => Promise<void>;
+    register: (params: { name: string; email: string; password: string; companyId: string }) => Promise<void>;
     logout: () => Promise<void>;
     loading: boolean;
 }
@@ -53,6 +54,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('fleetflow_refresh', data.refreshToken);
     };
 
+    const register = async ({ name, email, password, companyId }: { name: string; email: string; password: string; companyId: string }) => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, companyId }),
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => null);
+            throw new Error(err?.error || 'Registration failed');
+        }
+        const data = await res.json();
+        setUser(data.user);
+        setAccessToken(data.accessToken);
+        localStorage.setItem('fleetflow_user', JSON.stringify(data.user));
+        localStorage.setItem('fleetflow_token', data.accessToken);
+        localStorage.setItem('fleetflow_refresh', data.refreshToken);
+    };
+
     const logout = async () => {
         const refreshToken = localStorage.getItem('fleetflow_refresh');
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
@@ -68,7 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, accessToken, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, accessToken, login, register, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
