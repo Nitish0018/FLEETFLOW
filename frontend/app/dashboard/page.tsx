@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import {
     Truck, AlertTriangle, Activity, Package,
-    LogOut, User, Bell, TrendingUp, Fuel, Wrench, Users
+    LogOut, User, Bell, TrendingUp, Fuel, Wrench, Users, LayoutDashboard,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import {
@@ -84,11 +84,25 @@ export default function DashboardPage() {
 
                 {/* Navbar */}
                 <nav className="sticky top-0 z-50 border-b border-[#1E293B] bg-[#0A0F1E]/90 backdrop-blur-md px-6 py-3.5 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C2FF] to-[#0066FF] flex items-center justify-center shadow-lg shadow-[#00C2FF]/20">
-                            <Truck className="w-4 h-4 text-white" />
+                    <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C2FF] to-[#0066FF] flex items-center justify-center shadow-lg shadow-[#00C2FF]/20">
+                                <Truck className="w-4 h-4 text-white" />
+                            </div>
+                            <span className="font-bold text-lg tracking-tight">FleetFlow</span>
                         </div>
-                        <span className="font-bold text-lg tracking-tight">FleetFlow</span>
+                        {/* Nav links */}
+                        <div className="hidden sm:flex items-center gap-1">
+                            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-[#00C2FF]/10 text-[#00C2FF] border border-[#00C2FF]/20">
+                                <LayoutDashboard className="w-3.5 h-3.5" /> Dashboard
+                            </button>
+                            <button
+                                onClick={() => router.push('/vehicles')}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-[#8892A4] hover:text-white hover:bg-[#1E293B] transition-colors"
+                            >
+                                <Truck className="w-3.5 h-3.5" /> Vehicles
+                            </button>
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -189,7 +203,7 @@ export default function DashboardPage() {
                                             contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #2D3748', borderRadius: 8 }}
                                             labelStyle={{ color: '#CBD5E1' }}
                                             itemStyle={{ color: '#00C2FF' }}
-                                            formatter={(v: number) => [`₹${v.toLocaleString()}`, 'Fuel Cost']}
+                                            formatter={(v: any) => [`₹${Number(v).toLocaleString()}`, 'Fuel Cost']}
                                         />
                                         <Bar dataKey="cost" fill="#00C2FF" radius={[4, 4, 0, 0]} />
                                     </BarChart>
