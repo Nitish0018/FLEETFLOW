@@ -95,6 +95,7 @@ export default function DashboardPage() {
                         <div className="hidden md:flex items-center gap-1">
                             <Link href="/dashboard" className="px-3 py-1.5 text-sm text-white bg-[#1E293B] rounded-lg transition-colors">Dashboard</Link>
                             <Link href="/vehicles" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Vehicles</Link>
+                            <Link href="/trips" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Trips</Link>
                         </div>
                     </div>
 

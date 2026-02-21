@@ -42,21 +42,21 @@ app.get('/api/health', (_req, res) => {
 import authRouter from './routes/auth.routes';
 import dashboardRouter from './routes/dashboard.routes';
 import vehiclesRouter from './routes/vehicles.routes';
+import driversRouter from './routes/drivers.routes';
+import tripsRouter from './routes/trips.routes';
 
 // Mount routers
 app.use('/api/auth', authRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/vehicles', vehiclesRouter);
-// app.use('/api/vehicles', vehiclesRouter);
-// app.use('/api/drivers', driversRouter);
-// app.use('/api/trips', tripsRouter);
+app.use('/api/drivers', driversRouter);
+app.use('/api/trips', tripsRouter);
 // app.use('/api/fuel', fuelRouter);
 // app.use('/api/maintenance', maintenanceRouter);
 // app.use('/api/expenses', expensesRouter);
 // app.use('/api/rules', rulesRouter);
 // app.use('/api/alerts', alertsRouter);
 // app.use('/api/analytics', analyticsRouter);
-// app.use('/api/dashboard', dashboardRouter);
 
 
 // Socket.io connection
