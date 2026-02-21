@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { Wrench, CheckCircle2, Clock, Truck, Plus, Search, Filter, AlertTriangle, User, LogOut } from 'lucide-react';
-import Link from 'next/link';
+import { Wrench, CheckCircle2, Clock, Plus, Search, Filter, AlertTriangle } from 'lucide-react';
+import { MainNav } from '@/components/MainNav';
 import api from '@/lib/api';
 
 type MaintenanceType = 'SCHEDULED' | 'URGENT';
@@ -159,39 +159,7 @@ export default function MaintenancePage() {
     return (
         <ProtectedRoute>
             <div className="min-h-screen bg-[#060B16] text-white">
-                {/* Navigation */}
-                <nav className="sticky top-0 z-40 border-b border-[#1E293B] bg-[#0A0F1E]/90 backdrop-blur-md px-6 py-3.5 flex items-center justify-between">
-                    <div className="flex items-center gap-8">
-                        <Link href="/dashboard" className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C2FF] to-[#0066FF] flex items-center justify-center">
-                                <Truck className="w-4 h-4 text-white" />
-                            </div>
-                            <span className="font-bold text-lg tracking-tight">FleetFlow</span>
-                        </Link>
-                        <div className="hidden md:flex items-center gap-1">
-                            <Link href="/dashboard" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Dashboard</Link>
-                            <Link href="/vehicles" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Vehicles</Link>
-                            <Link href="/trips" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Trips</Link>
-                            <Link href="/drivers" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Drivers</Link>
-                            <Link href="/maintenance" className="px-3 py-1.5 text-sm text-white bg-[#1E293B] rounded-lg transition-colors">Maintenance</Link>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Link href="/profile" className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#2D3748] text-sm border border-[#00C2FF]/20 shadow-[0_0_10px_rgba(0,194,255,0.1)] hover:bg-[#3A4A63] transition-colors">
-                            <User className="w-3.5 h-3.5 text-[#00C2FF]" />
-                            <span className="text-white">{user?.name}</span>
-                            <span className="px-1.5 py-0.5 bg-[#00C2FF]/10 text-[#00C2FF] rounded text-xs font-medium border border-[#00C2FF]/20 hidden sm:block">
-                                {user?.role?.replace(/_/g, ' ')}
-                            </span>
-                        </Link>
-                        <button
-                            onClick={handleLogout}
-                            className="flex items-center gap-1.5 text-sm text-[#8892A4] hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-[#1E293B]"
-                        >
-                            <LogOut className="w-4 h-4" />
-                        </button>
-                    </div>
-                </nav>
+                <MainNav />
 
                 <main className="max-w-7xl mx-auto px-6 py-8">
                     {/* Header Row */}
