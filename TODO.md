@@ -16,41 +16,44 @@
 
 ---
 
-## ⚙️ PHASE 0 — Project Setup & Infrastructure
+## ⚙️ PHASE 0 — Project Setup & Infrastructure ✅
 
 ### 0.1 Repo & Tooling
-- [ ] Initialize project (monorepo or separate `frontend/` + `backend/` folders)
-- [ ] Set up `.gitignore`, `README.md`, `.env.example`
-- [ ] Configure ESLint + Prettier for frontend and backend
+- [x] Initialize project (`frontend/` + `backend/` folders)
+- [x] Set up `.gitignore`, `README.md`, `.env.example`
+- [x] Git repo initialized + pushed to GitHub (`Nitish0018/FLEETFLOW`)
+- [ ] Configure ESLint + Prettier (auto-configured by Next.js; add shared config if needed)
 
 ### 0.2 Frontend (Next.js + Tailwind)
-- [ ] Bootstrap Next.js app with TypeScript (`npx create-next-app@latest --typescript`)
-- [ ] Install and configure Tailwind CSS
-- [ ] Install Framer Motion (micro-animations)
-- [ ] Install Recharts (charts & KPI dashboards)
-- [ ] Install Lucide React (icons) + Shadcn UI (reusable components)
-- [ ] Define color palette, typography, and spacing tokens
-- [ ] Set up responsive breakpoints (320px → 1920px+)
+- [x] Next.js app scaffolded with TypeScript + Tailwind + ESLint
+- [x] Tailwind CSS configured (built into Next.js scaffold)
+- [x] Install Framer Motion, Recharts, Lucide React, Socket.io-client
+- [x] `frontend/lib/api.ts` — typed API client created
+- [ ] Install Shadcn UI (`npx shadcn-ui@latest init`)
+- [ ] Define color palette tokens in `globals.css` (Navy `#0A0F1E`, Electric `#00C2FF`)
+- [ ] Set up responsive breakpoint utilities
 
 ### 0.3 Backend (Node.js / Express)
-- [ ] Initialize Node.js + Express with TypeScript
-- [ ] Set up folder structure: `routes/`, `controllers/`, `middlewares/`, `services/`
-- [ ] Install: `helmet`, `cors`, `express-rate-limit`, `bcrypt`, `jsonwebtoken`
-- [ ] Configure CORS to allow frontend origin
+- [x] Node.js + Express + TypeScript initialized in `backend/`
+- [x] Folder structure created: `src/routes/`, `src/controllers/`, `src/middlewares/`, `src/services/`, `src/lib/`
+- [x] Installed: `helmet`, `cors`, `express-rate-limit`, `bcrypt`, `jsonwebtoken`, `socket.io`
+- [x] `src/index.ts` — main server with CORS, helmet, rate-limit, Socket.io, health check
+- [x] `src/middlewares/auth.middleware.ts` — JWT + RBAC roleGuard
+- [x] `src/lib/prisma.ts` — singleton Prisma client
+- [x] `src/lib/redis.ts` — singleton Redis client
 
 ### 0.4 Database (PostgreSQL + Prisma + Redis)
-- [ ] Set up PostgreSQL instance (Supabase recommended)
-- [ ] Install and initialize Prisma ORM (`npx prisma init`)
-- [ ] Define full Prisma schema (see Phase 1)
-- [ ] Run initial migration (`npx prisma migrate dev`)
-- [ ] Set up Redis for caching KPIs and session management (`ioredis`)
+- [ ] Create Supabase project + copy `DATABASE_URL` into `backend/.env`
+- [x] Prisma installed + `prisma/schema.prisma` written (all 10 entities, enums, relations)
+- [ ] Run `npx prisma migrate dev --name init` (needs `DATABASE_URL` first)
+- [ ] Set up Redis instance (local or Upstash); copy `REDIS_URL` into `backend/.env`
 
 ### 0.5 DevOps & Hosting
-- [ ] Deploy frontend to **Vercel** (connect GitHub for CI/CD)
-- [ ] Deploy backend to **Render / Railway**
-- [ ] Set up **AWS S3** bucket for document/file uploads (licenses, insurance, RC)
-- [ ] Set up **Sentry** for error tracking (frontend + backend)
-- [ ] Set up **Socket.io** server on backend + client on frontend
+- [x] Socket.io server set up on backend + client package installed on frontend
+- [ ] Deploy frontend to **Vercel** (connect `Nitish0018/FLEETFLOW` → `frontend/` folder)
+- [ ] Deploy backend to **Render / Railway** (root: `backend/`, build: `npm run build`)
+- [ ] Set up **AWS S3** bucket for file uploads
+- [ ] Add **Sentry** SDK to frontend + backend
 
 ---
 
@@ -58,16 +61,17 @@
 
 ### Core Entities (Prisma Models)
 
-- [ ] **Users** — `id`, `name`, `email`, `password_hash`, `role` (fleet_manager / dispatcher / safety_officer / financial_analyst), `company_id`, `created_at`
-- [ ] **Vehicles** — `id`, `name`, `model`, `license_plate` (unique), `type` (Truck/Van/Bike), `max_capacity_kg`, `odometer_km`, `status` (Available / On Trip / In Shop / Retired), `company_id`, `created_at`
-- [ ] **Drivers** — `id`, `name`, `license_number`, `license_expiry`, `license_category` (Truck/Van/Bike), `status` (On Duty / Off Duty / Suspended), `safety_score`, `trip_completion_rate`, `company_id`, `created_at`
-- [ ] **Trips** — `id`, `vehicle_id`, `driver_id`, `cargo_weight_kg`, `origin`, `destination`, `status` (Draft / Dispatched / Completed / Cancelled), `odometer_start`, `odometer_end`, `distance_km`, `created_at`, `completed_at`
-- [ ] **Fuel Logs** — `id`, `vehicle_id`, `trip_id` (optional), `litres`, `cost`, `date`, `created_at`
-- [ ] **Maintenance Logs** — `id`, `vehicle_id`, `type` (Scheduled / Urgent), `description`, `cost`, `date`, `status` (Open / Resolved), `created_at`
-- [ ] **Expenses** — `id`, `vehicle_id`, `category` (Fuel / Maintenance / Insurance / Other), `amount`, `description`, `date`, `created_at`
-- [ ] **Rules** — `id`, `company_id`, `trigger_type`, `condition_value`, `action_type`, `is_active`
-- [ ] **Alerts** — `id`, `rule_id`, `vehicle_id`, `driver_id`, `message`, `severity`, `is_read`, `created_at`
-- [ ] Add foreign key relationships and indexes on all join fields
+- [x] **Users** — `id`, `name`, `email`, `password_hash`, `role`, `company_id`, `created_at`
+- [x] **Vehicles** — `id`, `name`, `model`, `license_plate` (unique), `type`, `max_capacity_kg`, `odometer_km`, `status`, `company_id`
+- [x] **Drivers** — `id`, `name`, `license_number`, `license_expiry`, `license_category`, `status`, `safety_score`, `trip_completion_rate`, `company_id`
+- [x] **Trips** — `id`, `vehicle_id`, `driver_id`, `cargo_weight_kg`, `origin`, `destination`, `status`, `odometer_start/end`, `distance_km`, `completed_at`
+- [x] **Fuel Logs** — `id`, `vehicle_id`, `trip_id` (optional), `litres`, `cost`, `date`
+- [x] **Maintenance Logs** — `id`, `vehicle_id`, `type`, `description`, `cost`, `date`, `status`
+- [x] **Expenses** — `id`, `vehicle_id`, `category`, `amount`, `description`, `date`
+- [x] **Rules** — `id`, `company_id`, `trigger_type`, `condition_value`, `action_type`, `is_active`
+- [x] **Alerts** — `id`, `rule_id`, `vehicle_id`, `driver_id`, `message`, `severity`, `is_read`
+- [x] Foreign key relationships and indexes defined
+- [ ] Run migration against live DB (`npx prisma migrate dev --name init`)
 
 ---
 
