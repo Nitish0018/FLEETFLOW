@@ -156,38 +156,49 @@
 
 ---
 
-## 🗺️ PHASE 5 — Trip Dispatcher & Management (Page 4)
+## 🗺️ PHASE 5 — Trip Dispatcher & Management (Page 4) ✅
 
 **Page Purpose:** Workflow to move cargo from Point A to Point B.
 
-### Backend (Trips)
+### Backend (Trips) ✅
 
-- [ ] `GET /api/trips` — List trips (filter: status, vehicle, driver, date range; paginated)
-- [ ] `GET /api/trips/:id` — Trip detail
-- [ ] `POST /api/trips` — Create trip:
+- [x] `GET /api/trips` — List trips (filter: status, vehicle, driver, date range; paginated)
+- [x] `GET /api/trips/:id` — Trip detail
+- [x] `POST /api/trips` — Create trip:
   - **Validation Rule 1:** CargoWeight > Vehicle.MaxCapacity → reject with error "Cargo exceeds vehicle capacity"
   - **Validation Rule 2:** Driver.license_expiry < today → reject with error "Driver license expired"
   - **Validation Rule 3:** Vehicle.status ≠ "Available" → reject
   - **Validation Rule 4:** Driver.status ≠ "Off Duty" → reject
   - On success: set Vehicle + Driver status → **"On Trip"**
-- [ ] `PUT /api/trips/:id/complete` — Mark trip done, record final odometer:
+- [x] `PUT /api/trips/:id/complete` — Mark trip done, record final odometer:
   - Set Vehicle + Driver status → **"Available"**
   - Trigger cost-per-km recalculation
-- [ ] `PUT /api/trips/:id/cancel` — Cancel trip, restore Vehicle + Driver status → "Available"
-- [ ] Trip lifecycle: **Draft → Dispatched → Completed → Cancelled**
+- [x] `PUT /api/trips/:id/cancel` — Cancel trip, restore Vehicle + Driver status → "Available"
+- [x] `PUT /api/trips/:id/dispatch` — Dispatch trip (Draft → Dispatched, marks vehicle/driver busy)
+- [x] Trip lifecycle: **Draft → Dispatched → Completed → Cancelled**
 
-### Frontend (Trips)
+### Backend (Drivers) ✅
 
-- [ ] Trips list page — data table with status pills (Draft / Dispatched / Completed / Cancelled)
-- [ ] Create Trip form:
+- [x] `GET /api/drivers` — List drivers (filter: status, license_category, available; paginated)
+- [x] `GET /api/drivers/:id` — Driver detail with recent trips and alerts
+- [x] `POST /api/drivers` — Create driver with validation
+- [x] `PUT /api/drivers/:id` — Update driver
+- [x] `PUT /api/drivers/:id/status` — Update driver status
+
+### Frontend (Trips) ✅
+
+- [x] Trips list page — data table with status pills (Draft / Dispatched / Completed / Cancelled)
+- [x] Create Trip form:
   - Vehicle selector (only shows "Available" vehicles)
   - Driver selector (only shows "Off Duty" + valid-license drivers)
   - Cargo weight input with live capacity validation indicator
   - Origin + Destination fields
-- [ ] Inline validation: show warning if cargo weight > vehicle capacity
-- [ ] Trip detail page (vehicle, driver, cargo, route, timeline)
-- [ ] "Mark Complete" button — opens odometer entry dialog
-- [ ] "Cancel Trip" button with confirmation
+- [x] Inline validation: show warning if cargo weight > vehicle capacity
+- [x] Trip detail page (vehicle, driver, cargo, route, timeline)
+- [x] "Dispatch Trip" button for DRAFT trips
+- [x] "Complete Trip" button — opens odometer entry dialog
+- [x] "Cancel Trip" button with confirmation
+- [x] Updated dashboard navigation with Trips link
 
 ---
 
@@ -195,24 +206,24 @@
 
 **Page Purpose:** Preventative and reactive vehicle health tracking.
 
-### Backend (Maintenance)
+### Backend (Maintenance) ✅
 
-- [ ] `GET /api/maintenance` — List maintenance logs (filter: vehicle, status: Open/Resolved)
-- [ ] `GET /api/maintenance/:id` — Log detail
-- [ ] `POST /api/maintenance` — Add service log entry:
+- [x] `GET /api/maintenance` — List maintenance logs (filter: vehicle, status: Open/Resolved)
+- [x] `GET /api/maintenance/:id` — Log detail
+- [x] `POST /api/maintenance` — Add service log entry:
   - **Auto-Logic:** Set Vehicle.status → **"In Shop"** (vehicle disappears from Dispatcher pool)
-- [ ] `PUT /api/maintenance/:id/resolve` — Mark resolved:
+- [x] `PUT /api/maintenance/:id/resolve` — Mark resolved:
   - Set Vehicle.status → **"Available"**
-- [ ] `DELETE /api/maintenance/:id` — Delete log
-- [ ] Rule: If maintenance scheduled date overdue by > 7 days → create Alert
+- [x] `DELETE /api/maintenance/:id` — Delete log
+- [x] Rule: If maintenance scheduled date overdue by > 7 days → create Alert
 
-### Frontend (Maintenance)
+### Frontend (Maintenance) ✅
 
-- [ ] Maintenance list page — data table (vehicle, type, description, date, status pill)
-- [ ] Add Maintenance form (vehicle selector, type: Scheduled/Urgent, description, cost, date)
-- [ ] Resolve maintenance button (updates vehicle status to Available)
-- [ ] Maintenance history timeline per vehicle (on vehicle detail page)
-- [ ] Visual indicator on vehicle cards: "In Shop" badge
+- [x] Maintenance list page — data table (vehicle, type, description, date, status pill)
+- [x] Add Maintenance form (vehicle selector, type: Scheduled/Urgent, description, cost, date)
+- [x] Resolve maintenance button (updates vehicle status to Available)
+- [x] Maintenance history timeline per vehicle (on vehicle detail page)
+- [x] Visual indicator on vehicle cards: "In Shop" badge
 
 ---
 
@@ -247,6 +258,7 @@
 **Page Purpose:** HR + compliance management for all drivers.
 
 ### Backend
+
 - [ ] `GET /api/drivers` — List drivers (filter: status, license_category; paginated)
 - [ ] `GET /api/drivers/:id` — Driver profile + trip history + safety score
 - [ ] `POST /api/drivers` — Add driver (name, license number, expiry date, license category, status)
@@ -259,6 +271,7 @@
 - [ ] **Safety Rule:** Trip completion rate, incident flags tracked per trip
 
 ### Frontend
+
 - [ ] Drivers list page — data table with status pills (On Duty / Off Duty / Suspended)
 - [ ] Driver profile page:
   - Personal info + license details
@@ -278,6 +291,7 @@
 **Page Purpose:** Data-driven decision making for Financial Analysts.
 
 ### Backend
+
 - [ ] `GET /api/analytics/fuel-efficiency` — km/L per vehicle
 - [ ] `GET /api/analytics/roi` — Vehicle ROI: `(Revenue - (Maintenance + Fuel)) / Acquisition Cost`
 - [ ] `GET /api/analytics/summary` — Company-wide: total fuel spend, total maintenance cost, fleet utilization %
@@ -286,6 +300,7 @@
 - [ ] Cache heavy aggregation queries in Redis
 
 ### Frontend
+
 - [ ] Analytics dashboard page:
   - Fuel efficiency table: vehicle → km/L
   - Vehicle ROI table: vehicle → revenue, costs, ROI%
@@ -300,6 +315,7 @@
 **Core differentiator of FleetFlow.**
 
 ### Backend (Rule Engine)
+
 - [ ] Design rule schema: `trigger_type` + `condition_value` + `action_type`
 - [ ] `GET /api/rules` — List all rules
 - [ ] `POST /api/rules` — Create rule
@@ -314,11 +330,13 @@
   - [ ] Cargo weight > vehicle capacity → Block trip creation
 
 ### Backend (Alerts)
+
 - [ ] `GET /api/alerts` — List alerts (filter: severity, unread)
 - [ ] `PUT /api/alerts/:id/read` — Mark as read
 - [ ] Push alert count to frontend via Socket.io
 
 ### Frontend
+
 - [ ] Notification bell in top navbar with unread badge count
 - [ ] Alerts dropdown / notification panel (list recent alerts)
 - [ ] Rules management page (list rules, toggle active/inactive)
@@ -329,12 +347,14 @@
 ## 🎨 PHASE 11 — UI/UX Polish & Accessibility
 
 ### Design System
+
 - [ ] Navy base: `#0A0F1E`, Electric accent: `#00C2FF`
 - [ ] Verify WCAG 2.1 AA contrast ratios on all text/background combos
 - [ ] 2px focus rings for keyboard navigation (WCAG compliance)
 - [ ] Status pill component: color-coded badges (Available=green, On Trip=blue, In Shop=amber, Retired=gray, Suspended=red)
 
 ### Reusable Components
+
 - [ ] KPI Card (value, label, icon, delta/trend)
 - [ ] Data Table (sortable columns, row filters, pagination)
 - [ ] Modal / Dialog (confirm/cancel pattern)
@@ -343,12 +363,14 @@
 - [ ] Top Navbar (breadcrumb, alert bell, user avatar + logout)
 
 ### Animations (Framer Motion)
+
 - [ ] Page fade-in transition
 - [ ] Card hover lift effect
 - [ ] Modal slide-in / slide-out
 - [ ] Status pill color-transition on update
 
 ### Responsive Layout
+
 - [ ] Mobile (320px): single column, stacked layout, hamburger menu
 - [ ] Tablet (768px): 2-column KPI grid, collapsible sidebar
 - [ ] Desktop (1024px+): 4-column KPI grid, full sidebar
@@ -359,6 +381,7 @@
 ## 🧪 PHASE 12 — Testing
 
 ### Backend
+
 - [ ] Set up Jest + Supertest
 - [ ] Unit tests: `authMiddleware`, `roleGuard`, rule engine logic
 - [ ] Integration tests: all CRUD routes (vehicles, drivers, trips, fuel, maintenance)
@@ -366,6 +389,7 @@
 - [ ] Export Postman collection to repo
 
 ### Frontend
+
 - [ ] Set up Jest + React Testing Library
 - [ ] Unit tests: KPI Card, Data Table, Trip creation form validations
 - [ ] Integration tests: protected route redirects, role-based sidebar visibility
@@ -393,6 +417,7 @@
 ## 🔮 PHASE 14 — Future Roadmap (Post-MVP)
 
 ### Phase 2
+
 - [ ] AI-powered predictive maintenance engine
 - [ ] Route optimization module
 - [ ] Driver fatigue detection
@@ -401,6 +426,7 @@
 - [ ] Telematics / IoT GPS device integration
 
 ### Phase 3
+
 - [ ] Blockchain-based compliance log ledger
 - [ ] Carbon footprint tracking per vehicle
 - [ ] EV fleet management module

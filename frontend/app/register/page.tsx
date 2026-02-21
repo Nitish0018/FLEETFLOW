@@ -100,7 +100,7 @@ export default function RegisterPage() {
                                         className="w-full bg-[#1E293B] border border-[#2D3748] rounded-xl pl-10 pr-4 py-3 text-white placeholder-[#4B5563] text-sm focus:outline-none focus:border-[#00C2FF] focus:ring-1 focus:ring-[#00C2FF] transition-all"
                                     />
                                 </div>
-                                <p className="mt-1 text-[11px] text-[#4B5563]">
+                                <p className="mt-1 text-[11px] text-[#203e67]">
                                     Used to group users from the same organisation. You can use any slug (e.g. your company name).
                                 </p>
                             </div>

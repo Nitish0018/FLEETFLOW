@@ -3,9 +3,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { Truck, Plus, Search, Filter, MoreVertical, Edit, Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Truck, Plus, Search, Filter, MoreVertical, User, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -21,7 +21,8 @@ interface Vehicle {
 }
 
 export default function VehiclesPage() {
-    const { accessToken, user } = useAuth();
+    const { accessToken, user, logout } = useAuth();
+    const router = useRouter();
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
@@ -30,6 +31,11 @@ export default function VehiclesPage() {
     // Add Vehicle Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newVehicle, setNewVehicle] = useState({ name: '', model: '', licensePlate: '', type: 'VAN', maxCapacityKg: 1000, odometerKm: 0 });
+
+    const handleLogout = async () => {
+        await logout();
+        router.replace('/login');
+    };
 
     const fetchVehicles = useCallback(async () => {
         if (!accessToken) return;
@@ -93,7 +99,7 @@ export default function VehiclesPage() {
                 <nav className="sticky top-0 z-40 border-b border-[#1E293B] bg-[#0A0F1E]/90 backdrop-blur-md px-6 py-3.5 flex items-center justify-between">
                     <div className="flex items-center gap-8">
                         <Link href="/dashboard" className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#00C2FF] to-[#0066FF] flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-lg bg-linear-to-br from-[#00C2FF] to-[#0066FF] flex items-center justify-center">
                                 <Truck className="w-4 h-4 text-white" />
                             </div>
                             <span className="font-bold text-lg tracking-tight">FleetFlow</span>
@@ -101,7 +107,25 @@ export default function VehiclesPage() {
                         <div className="hidden md:flex items-center gap-1">
                             <Link href="/dashboard" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Dashboard</Link>
                             <Link href="/vehicles" className="px-3 py-1.5 text-sm text-white bg-[#1E293B] rounded-lg transition-colors">Vehicles</Link>
+                            <Link href="/trips" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Trips</Link>
+                            <Link href="/drivers" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Drivers</Link>
+                            <Link href="/maintenance" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Maintenance</Link>
                         </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Link href="/profile" className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#2D3748] text-sm border border-[#00C2FF]/20 shadow-[0_0_10px_rgba(0,194,255,0.1)] hover:bg-[#3A4A63] transition-colors">
+                            <User className="w-3.5 h-3.5 text-[#00C2FF]" />
+                            <span className="text-white">{user?.name}</span>
+                            <span className="px-1.5 py-0.5 bg-[#00C2FF]/10 text-[#00C2FF] rounded text-xs font-medium border border-[#00C2FF]/20 hidden sm:block">
+                                {user?.role?.replace(/_/g, ' ')}
+                            </span>
+                        </Link>
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-1.5 text-sm text-[#8892A4] hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-[#1E293B]"
+                        >
+                            <LogOut className="w-4 h-4" />
+                        </button>
                     </div>
                 </nav>
 
@@ -117,7 +141,7 @@ export default function VehiclesPage() {
                         {user?.role === 'FLEET_MANAGER' || user?.role === 'SUPER_ADMIN' ? (
                             <button
                                 onClick={() => setIsModalOpen(true)}
-                                className="bg-gradient-to-r from-[#00C2FF] to-[#0066FF] hover:from-[#00A8E0] hover:to-[#0052D9] text-white font-medium py-2 px-4 rounded-xl transition-all shadow-lg shadow-[#00C2FF]/20 flex items-center gap-2 text-sm"
+                                className="bg-linear-to-r from-[#00C2FF] to-[#0066FF] hover:from-[#00A8E0] hover:to-[#0052D9] text-white font-medium py-2 px-4 rounded-xl transition-all shadow-lg shadow-[#00C2FF]/20 flex items-center gap-2 text-sm"
                             >
                                 <Plus className="w-4 h-4" /> Add Vehicle
                             </button>
@@ -265,7 +289,7 @@ export default function VehiclesPage() {
                                 </div>
                                 <div className="pt-4 flex gap-3">
                                     <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 px-4 py-2 border border-[#2D3748] text-white text-sm font-medium rounded-xl hover:bg-[#1E293B] transition-colors">Cancel</button>
-                                    <button type="submit" className="flex-1 bg-gradient-to-r from-[#00C2FF] to-[#0066FF] text-white text-sm font-medium rounded-xl hover:from-[#00A8E0] hover:to-[#0052D9] transition-all shadow-lg shadow-[#00C2FF]/20">Save Vehicle</button>
+                                    <button type="submit" className="flex-1 bg-linear-to-r from-[#00C2FF] to-[#0066FF] text-white text-sm font-medium rounded-xl hover:from-[#00A8E0] hover:to-[#0052D9] transition-all shadow-lg shadow-[#00C2FF]/20">Save Vehicle</button>
                                 </div>
                             </form>
                         </div>

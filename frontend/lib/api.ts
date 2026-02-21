@@ -3,7 +3,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 const getAuthHeaders = (): Record<string, string> => {
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem('fleetflow_token');
         if (token) headers['Authorization'] = `Bearer ${token}`;
     }
     return headers;

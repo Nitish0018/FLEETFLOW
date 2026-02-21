@@ -14,9 +14,9 @@ const API = process.env.NEXT_PUBLIC_API_URL;
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
     AVAILABLE: { label: 'Available', color: '#10B981', bg: '#10B98120' },
-    ON_TRIP:   { label: 'On Trip',   color: '#00C2FF', bg: '#00C2FF20' },
-    IN_SHOP:   { label: 'In Shop',   color: '#F59E0B', bg: '#F59E0B20' },
-    RETIRED:   { label: 'Retired',   color: '#6B7280', bg: '#6B728020' },
+    ON_TRIP: { label: 'On Trip', color: '#00C2FF', bg: '#00C2FF20' },
+    IN_SHOP: { label: 'In Shop', color: '#F59E0B', bg: '#F59E0B20' },
+    RETIRED: { label: 'Retired', color: '#6B7280', bg: '#6B728020' },
 };
 
 const TYPE_LABEL: Record<string, string> = { TRUCK: 'Truck', VAN: 'Van', BIKE: 'Bike', OTHER: 'Other' };
@@ -237,6 +237,24 @@ export default function VehicleDetailPage() {
                                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm bg-[#00C2FF]/10 text-[#00C2FF] border border-[#00C2FF]/20"
                             >
                                 <Truck className="w-3.5 h-3.5" /> Vehicles
+                            </button>
+                            <button
+                                onClick={() => router.push('/trips')}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-[#8892A4] hover:text-white hover:bg-[#1E293B] transition-colors"
+                            >
+                                <MapPin className="w-3.5 h-3.5" /> Trips
+                            </button>
+                            <button
+                                onClick={() => router.push('/drivers')}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-[#8892A4] hover:text-white hover:bg-[#1E293B] transition-colors"
+                            >
+                                <User className="w-3.5 h-3.5" /> Drivers
+                            </button>
+                            <button
+                                onClick={() => router.push('/maintenance')}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-[#8892A4] hover:text-white hover:bg-[#1E293B] transition-colors"
+                            >
+                                <Wrench className="w-3.5 h-3.5" /> Maintenance
                             </button>
                         </div>
                     </div>

@@ -96,6 +96,8 @@ export default function DashboardPage() {
                             <Link href="/dashboard" className="px-3 py-1.5 text-sm text-white bg-[#1E293B] rounded-lg transition-colors">Dashboard</Link>
                             <Link href="/vehicles" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Vehicles</Link>
                             <Link href="/trips" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Trips</Link>
+                            <Link href="/drivers" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Drivers</Link>
+                            <Link href="/maintenance" className="px-3 py-1.5 text-sm text-[#8892A4] hover:text-white rounded-lg hover:bg-[#1E293B] transition-colors">Maintenance</Link>
                         </div>
                     </div>
 
@@ -108,13 +110,13 @@ export default function DashboardPage() {
                             )}
                         </button>
 
-                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1E293B] text-sm">
-                            <User className="w-3.5 h-3.5 text-[#8892A4]" />
-                            <span className="text-[#CBD5E1]">{user?.name}</span>
-                            <span className="px-1.5 py-0.5 bg-[#00C2FF]/10 text-[#00C2FF] rounded text-xs font-medium border border-[#00C2FF]/20">
+                        <Link href="/profile" className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#2D3748] text-sm border border-[#00C2FF]/20 shadow-[0_0_10px_rgba(0,194,255,0.1)] hover:bg-[#3A4A63] transition-colors">
+                            <User className="w-3.5 h-3.5 text-[#00C2FF]" />
+                            <span className="text-white">{user?.name}</span>
+                            <span className="px-1.5 py-0.5 bg-[#00C2FF]/10 text-[#00C2FF] rounded text-xs font-medium border border-[#00C2FF]/20 hidden sm:block">
                                 {user?.role?.replace(/_/g, ' ')}
                             </span>
-                        </div>
+                        </Link>
 
                         <button
                             onClick={handleLogout}
@@ -156,8 +158,8 @@ export default function DashboardPage() {
                     {/* Financial cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {[
-                            { label: 'Fuel Spend (This Month)', value: summary ? `₹${summary.fuelSpendThisMonth.toLocaleString()}` : '—', icon: Fuel, color: '#F59E0B' },
-                            { label: 'Maintenance Cost (This Month)', value: summary ? `₹${summary.maintenanceCostThisMonth.toLocaleString()}` : '—', icon: Wrench, color: '#EF4444' },
+                            { label: 'Fuel Spend (This Month)', value: summary ? `₹${(summary.fuelSpendThisMonth || 0).toLocaleString()}` : '—', icon: Fuel, color: '#F59E0B' },
+                            { label: 'Maintenance Cost (This Month)', value: summary ? `₹${(summary.maintenanceCostThisMonth || 0).toLocaleString()}` : '—', icon: Wrench, color: '#EF4444' },
                             { label: 'Total Drivers', value: summary?.totalDrivers ?? '—', icon: Users, color: '#8B5CF6' },
                         ].map(card => (
                             <div key={card.label} className="bg-[#111827] border border-[#1E293B] rounded-2xl p-5 flex items-center gap-4">
