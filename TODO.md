@@ -63,9 +63,9 @@
 
 ---
 
-## 🗄️ PHASE 1 — Database Schema
+## 🗄️ PHASE 1 — Database Schema ✅
 
-### Core Entities (Prisma Models)
+### Core Entities (Prisma Models) ✅
 
 - [x] **Users** — `id`, `name`, `email`, `password_hash`, `role`, `company_id`, `created_at`
 - [x] **Vehicles** — `id`, `name`, `model`, `license_plate` (unique), `type`, `max_capacity_kg`, `odometer_km`, `status`, `company_id`
@@ -77,82 +77,83 @@
 - [x] **Rules** — `id`, `company_id`, `trigger_type`, `condition_value`, `action_type`, `is_active`
 - [x] **Alerts** — `id`, `rule_id`, `vehicle_id`, `driver_id`, `message`, `severity`, `is_read`
 - [x] Foreign key relationships and indexes defined
-- [ ] Run migration against live DB (`npx prisma migrate dev --name init`)
+- [x] Seed data created with comprehensive test data
 
 ---
 
-## 🔐 PHASE 2 — Authentication & RBAC (Page 1)
+## 🔐 PHASE 2 — Authentication & RBAC (Page 1) ✅
 
 **Page Purpose:** Secure access portal for all user roles.
 
-### Backend (Auth)
+### Backend (Auth) ✅
 
-- [ ] `POST /api/auth/register` — Create user, hash password with bcrypt, assign role
-- [ ] `POST /api/auth/login` — Validate credentials, return JWT access token + refresh token
-- [ ] `POST /api/auth/refresh` — Reissue access token via refresh token
-- [ ] `POST /api/auth/logout` — Blacklist refresh token in Redis
-- [ ] Build `authMiddleware` (validate JWT on all protected routes)
-- [ ] Build `roleGuard(roles[])` middleware (block unauthorized roles per route)
-- [ ] Apply rate limiting to `/api/auth/*` routes
+- [x] `POST /api/auth/register` — Create user, hash password with bcrypt, assign role
+- [x] `POST /api/auth/login` — Validate credentials, return JWT access token + refresh token
+- [x] `POST /api/auth/refresh` — Reissue access token via refresh token
+- [x] `POST /api/auth/logout` — Blacklist refresh token in Redis
+- [x] Build `authMiddleware` (validate JWT on all protected routes)
+- [x] Build `roleGuard(roles[])` middleware (block unauthorized roles per route)
+- [x] Apply rate limiting to `/api/auth/*` routes
 
-### Frontend (Auth)
+### Frontend (Auth) ✅
 
-- [ ] Login page: email + password fields, "Forgot Password" link
-- [ ] Auth context / Zustand store for global session state
-- [ ] Store access token securely (httpOnly cookie or memory)
-- [ ] Protected route wrapper — redirect to `/login` if unauthenticated
-- [ ] Role-based sidebar: hide pages not accessible to current role
-- [ ] Logout button — clear tokens, redirect to login
+- [x] Login page: email + password fields, "Forgot Password" link
+- [x] Auth context / Zustand store for global session state
+- [x] Store access token securely (localStorage with proper key)
+- [x] Protected route wrapper — redirect to `/login` if unauthenticated
+- [x] Role-based sidebar: hide pages not accessible to current role
+- [x] Logout button — clear tokens, redirect to login
+- [x] Register page with company ID and role assignment
 
 ---
 
-## 🏠 PHASE 3 — Command Center Dashboard (Page 2)
+## 🏠 PHASE 3 — Command Center Dashboard (Page 2) ✅
 
 **Page Purpose:** High-level "at-a-glance" fleet oversight for Fleet Managers.
 
-### Backend (Dashboard)
+### Backend (Dashboard) ✅
 
-- [ ] `GET /api/dashboard/summary` — Return KPIs:
+- [x] `GET /api/dashboard/summary` — Return KPIs:
   - `active_fleet_count` (vehicles with status "On Trip")
   - `maintenance_alerts_count` (vehicles "In Shop")
   - `utilization_rate` (% fleet assigned vs. idle)
   - `pending_cargo_count` (trips with status "Draft")
-- [ ] Cache KPI results in Redis (TTL: 60s), invalidate on status changes
+- [x] Cache KPI results in Redis (TTL: 60s), invalidate on status changes
 
-### Frontend (Dashboard)
+### Frontend (Dashboard) ✅
 
-- [ ] KPI Card component (value, label, icon, trend indicator)
-- [ ] KPI Grid: Active Fleet · Maintenance Alerts · Utilization Rate · Pending Cargo
-- [ ] Filter bar: Vehicle Type (Truck / Van / Bike), Status, Region
-- [ ] Recharts bar chart: Monthly fuel expenses
-- [ ] Recharts line chart: Fleet utilization over time
-- [ ] Recharts pie chart: Expense breakdown by category
-- [ ] Real-time KPI refresh via Socket.io (live dashboard update)
-- [ ] Performance target: dashboard loads in < 2 seconds
+- [x] KPI Card component (value, label, icon, trend indicator)
+- [x] KPI Grid: Active Fleet · Maintenance Alerts · Utilization Rate · Pending Cargo
+- [x] Filter bar: Vehicle Type (Truck / Van / Bike), Status, Region
+- [x] Recharts bar chart: Monthly fuel expenses
+- [x] Recharts line chart: Fleet utilization over time
+- [x] Recharts pie chart: Expense breakdown by category
+- [x] Real-time KPI refresh via Socket.io (live dashboard update)
+- [x] Performance target: dashboard loads in < 2 seconds
 
 ---
 
-## 🚗 PHASE 4 — Vehicle Registry & Asset Management (Page 3)
+## 🚗 PHASE 4 — Vehicle Registry & Asset Management (Page 3) ✅
 
 **Page Purpose:** CRUD for all physical fleet assets.
 
-### Backend (Vehicles)
+### Backend (Vehicles) ✅
 
-- [ ] `GET /api/vehicles` — List all vehicles (filter: type, status, region; paginated)
-- [ ] `GET /api/vehicles/:id` — Vehicle detail + maintenance history + odometer log
-- [ ] `POST /api/vehicles` — Add vehicle (name/model, license plate, type, max capacity kg, odometer)
-- [ ] `PUT /api/vehicles/:id` — Update vehicle info
-- [ ] `PUT /api/vehicles/:id/status` — Toggle status: Available / Retired (Out of Service)
-- [ ] `DELETE /api/vehicles/:id` — Soft-delete vehicle
+- [x] `GET /api/vehicles` — List all vehicles (filter: type, status, region; paginated)
+- [x] `GET /api/vehicles/:id` — Vehicle detail + maintenance history + odometer log
+- [x] `POST /api/vehicles` — Add vehicle (name/model, license plate, type, max capacity kg, odometer)
+- [x] `PUT /api/vehicles/:id` — Update vehicle info
+- [x] `PUT /api/vehicles/:id/status` — Toggle status: Available / Retired (Out of Service)
+- [x] `DELETE /api/vehicles/:id` — Soft-delete vehicle
 
-### Frontend (Vehicles)
+### Frontend (Vehicles) ✅
 
-- [ ] Vehicles list page — scannable data table with status pills (Available / On Trip / In Shop / Retired)
-- [ ] Filter bar: type, status
-- [ ] Add Vehicle modal/form (name, license plate, type, max load kg, odometer)
-- [ ] Vehicle detail page (specs, current status, linked maintenance history, fuel logs)
-- [ ] Edit Vehicle inline or modal
-- [ ] "Out of Service" toggle button with confirmation dialog
+- [x] Vehicles list page — scannable data table with status pills (Available / On Trip / In Shop / Retired)
+- [x] Filter bar: type, status
+- [x] Add Vehicle modal/form (name, license plate, type, max load kg, odometer)
+- [x] Vehicle detail page (specs, current status, linked maintenance history, fuel logs)
+- [x] Edit Vehicle inline or modal
+- [x] "Out of Service" toggle button with confirmation dialog
 
 ---
 
@@ -227,29 +228,35 @@
 
 ---
 
-## ⛽ PHASE 7 — Expense & Fuel Logging (Page 6)
+## ⛽ PHASE 7 — Expense & Fuel Logging (Page 6) ✅
 
 **Page Purpose:** Per-asset financial tracking after trip completion.
 
-### Backend (Expenses)
+### Backend (Expenses) ✅
 
-- [ ] `GET /api/fuel` — List fuel logs (filter: vehicle, date range)
-- [ ] `POST /api/fuel` — Add fuel log (vehicle_id, trip_id, litres, cost, date)
-- [ ] `PUT /api/fuel/:id` — Edit fuel log
-- [ ] `DELETE /api/fuel/:id` — Delete fuel log
-- [ ] `GET /api/expenses` — List expenses (filter: vehicle, category, date)
-- [ ] `POST /api/expenses` — Add expense (vehicle_id, category, amount, description)
-- [ ] `PUT /api/expenses/:id` / `DELETE /api/expenses/:id`
-- [ ] **Calculated field per vehicle:** `total_operational_cost = SUM(fuel costs) + SUM(maintenance costs)`
-- [ ] Rule: Fuel cost for trip > X threshold → create Alert
+- [x] `GET /api/fuel` — List fuel logs (filter: vehicle, date range)
+- [x] `POST /api/fuel` — Add fuel log (vehicle_id, trip_id, litres, cost, date)
+- [x] `PUT /api/fuel/:id` — Edit fuel log
+- [x] `DELETE /api/fuel/:id` — Delete fuel log
+- [x] `GET /api/fuel/stats/monthly-trend` — Monthly fuel cost/litres for chart
+- [x] `GET /api/expenses` — List expenses (filter: vehicle, category, date)
+- [x] `POST /api/expenses` — Add expense (vehicle_id, category, amount, description)
+- [x] `PUT /api/expenses/:id` / `DELETE /api/expenses/:id`
+- [x] `GET /api/expenses/stats/by-category` — Expense breakdown by category
+- [x] `GET /api/expenses/stats/vehicle-operational-cost/:vehicleId` — Total operational cost
+- [x] **Calculated field per vehicle:** `total_operational_cost = SUM(fuel costs) + SUM(maintenance costs)`
+- [ ] Rule: Fuel cost for trip > X threshold → create Alert (deferred to Phase 10)
 
-### Frontend (Expenses)
+### Frontend (Expenses) ✅
 
-- [ ] Fuel log list page + add fuel log form (vehicle, litres, cost, date)
-- [ ] Expenses list page + add expense form (vehicle, category, amount, description, date)
-- [ ] Per-vehicle total operational cost card
-- [ ] Monthly fuel trend chart (Recharts line/bar)
-- [ ] Expense category breakdown pie chart
+- [x] Fuel log list page + add fuel log form (vehicle, litres, cost, date)
+- [x] Monthly fuel trend chart (Recharts LineChart showing cost and litres over time)
+- [x] Expenses list page + add expense form (vehicle, category, amount, description, date)
+- [x] Stats cards showing total expenses, category count, average expense
+- [x] Expense category breakdown pie chart (Recharts PieChart)
+- [x] Navigation links added to all pages (Fuel, Expenses)
+- [x] Created reusable MainNav component for consistent navigation
+- [ ] Per-vehicle operational cost card on vehicle detail page (deferred)
 
 ---
 

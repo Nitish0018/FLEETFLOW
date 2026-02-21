@@ -45,6 +45,8 @@ import vehiclesRouter from './routes/vehicles.routes';
 import driversRouter from './routes/drivers.routes';
 import tripsRouter from './routes/trips.routes';
 import maintenanceRouter from './routes/maintenance.routes';
+import fuelRouter from './routes/fuel.routes';
+import expensesRouter from './routes/expenses.routes';
 
 // Mount routers
 app.use('/api/auth', authRouter);
@@ -52,9 +54,9 @@ app.use('/api/dashboard', dashboardRouter);
 app.use('/api/vehicles', vehiclesRouter);
 app.use('/api/drivers', driversRouter);
 app.use('/api/trips', tripsRouter);
-// app.use('/api/fuel', fuelRouter);
+app.use('/api/fuel', fuelRouter);
 app.use('/api/maintenance', maintenanceRouter);
-// app.use('/api/expenses', expensesRouter);
+app.use('/api/expenses', expensesRouter);
 // app.use('/api/rules', rulesRouter);
 // app.use('/api/alerts', alertsRouter);
 // app.use('/api/analytics', analyticsRouter);
